@@ -16,6 +16,9 @@
 # get list of video settings, possibly in different program?
 # or a class / function call perhaps?
 
+# use config file to save settings?
+
+
 list_yes = ["yes", "y", "yep", "yeppers", "ok", "sure", "si"]
 list_no = ["no", "n", "nope", "nein"]
 
