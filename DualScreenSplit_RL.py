@@ -2,45 +2,38 @@
 Program to change the resolution settings for Rocket League
 '''
 
-# variables
-settings_file = "C:\\Users\\delsuckahh\\Documents\\My Games\\Rocket League\\TAGame\\Config\\TASystemSettings.ini"
-list_yes = ["yes", "y", "yep", "yeppers", "ok", "sure", "si"]
-list_no = ["no", "n", "nope", "nein"]
-# these are the options - update this dict for additional profiles
-# syntax - {profile name} : [{ResX},{ResY},{Borderless},{Fullscreen}]
-profiles = {"single_screen" : [1920,1080,"True","False"],
-            "dual_screen" : [3840,1080,"False","True"]}
+# set the variables
+settings_file = r'C:\Users\delsuckahh\Documents\My Games\Rocket League\TAGame\Config\TASystemSettings.ini'
+params = ["ResX", "ResY", "Borderless", "Fullscreen"]
+profiles = {"single screen": [1920, 1080, True, False],
+            "dual screen":   [3840, 1080, False, True]}
+options = '\n'.join(profiles.keys())
 
+# define the function
+def changeFile(inFile, k, v):
+    with open(inFile, 'r') as f:
+        lines = [k+'='+str(v) if l.startswith(k) else l for l in f]
+    
+    with open(inFile, 'w') as f:
+        for line in lines:
+            print(line, file=f)
 
-def changeFile(inFile, oldString, newString):
-    with open(inFile) as f:
-      s = f.readlines()
-      line = [x.strip() for x in s]
-      for n, i in enumerate(line):
-          if i[:4]==oldString:
-              line[n] = newString
+# get the options
+print("This program will change resolution settings for Rocket League")
+print("Please select a profile from the following:", options, sep='\n')
+user_choice = input("> ")
+while user_choice not in profiles:
+    print("Invalid choice. Please try again:", options, sep='\n')
+    user_choice = input("> ")
 
-    with open(inFile, "w") as f:
-        for item in line:
-            f.write("%s\n" % item)
+# change the settings
+settings = profiles[user_choice]
+print("Changing resolution to %dx%d" % tuple(settings[:2]))
+for k, v in zip(params, settings):
+    print("Setting {} to {}".format(k, v))
+    changeFile(settings_file, k, v)
 
-print("This program will change resolution settings for Rocket League\n")
-print("Please select a profile from the following:\n>")
-
-while True:
-    for key in profiles:
-        print(key)
-    user_choice = input()
-    if user_choice not in profiles:
-        print("Invalid choice...Try again.")
-    else:
-        print("Changing resolution to: " + str(profiles[user_choice][0]) + " x "
-               + str(profiles[user_choice][1]) + "\n")
-        changeFile(settings_file,"ResX","ResX=%s" % str(profiles[user_choice][0]))
-        changeFile(settings_file,"ResY","ResY=%s" % str(profiles[user_choice][1]))
-        changeFile(settings_file,"Bord","Borderless=%s" % profiles[user_choice][2])
-        changeFile(settings_file,"Full","Fullscreen=%s" % profiles[user_choice][3])
-        print("Resolution settings have been updated!")
-        break
-
-input("Procedure done.  Press Enter to exit")
+# finish the thing
+print("Resolution settings have been updated!")
+print("Procedure done. Press Enter to exit, or any other key to delay your inevitable fate")
+input()
